@@ -33,7 +33,7 @@ services:
       REDIS_URL: redis://redis:6379/0
   test:
     build: .
-    command: bundle exec rspec
+    command: bash -c "bundle exec rails db:test:prepare && bundle exec rspec"
     volumes:
       - .:/rails
     depends_on:
