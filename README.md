@@ -214,5 +214,28 @@ Executar os testes:
 bundle exec rspec
 ```
 
+## Executanto app com o Docker
+
+Esta aplicação foi dockerizada. Você pode executar a aplicação e seus serviços usando Docker Compose.
+
+### Pré-requisitos
+
+- Docker
+- Docker Compose
+
+### Executando a aplicação
+
+Para construir as imagens Docker e iniciar os serviços (PostgreSQL, Redis, servidor Rails, Sidekiq), execute:
+
+```bash
+docker-compose up --build
+```
+
+Para executar os testes:
+
+```bash
+docker-compose run --rm test bundle exec rspec
+```
+
 ### Como enviar seu projeto
 Salve seu código em um versionador de código (GitHub, GitLab, Bitbucket) e nos envie o link publico. Se achar necessário, informe no README as instruções para execução ou qualquer outra informação relevante para correção/entendimento da sua solução.
