@@ -7,13 +7,19 @@ class CartsController < ApplicationController
     render json: cart.as_json_payload, status: :created
   end
 
+  # GET /cart
+  def show
+    cart = current_cart
+    render json: cart.as_json_payload
+  end
+
   private
 
   def current_cart
     if session[:cart_id]
       Cart.find(session[:cart_id])
     else
-      cart = Cart.create!
+      cart = Cart.create!(total_price: 0)
       session[:cart_id] = cart.id
       cart
     end
