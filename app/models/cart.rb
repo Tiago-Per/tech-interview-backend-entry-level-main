@@ -24,4 +24,16 @@ class Cart < ApplicationRecord
     total = cart_items.includes(:product).sum { |ci| ci.product.price * ci.quantity }
     update!(total_price: total)
   end
+
+  def mark_as_abandoned
+    if last_interaction_at < 3.hours.ago
+      update!(abandoned: true)
+    end
+  end
+
+  def remove_if_abandoned
+    if abandoned? && last_interaction_at < 7.days.ago
+      destroy!
+    end
+  end
 end

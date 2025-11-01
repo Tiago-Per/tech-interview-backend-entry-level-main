@@ -11,6 +11,8 @@ class RemoveProductFromCartService
     cart_item.destroy
     
     @cart.recalculate_total!
+    @cart.update!(last_interaction_at: Time.current)
+    
     @cart
   end
 end

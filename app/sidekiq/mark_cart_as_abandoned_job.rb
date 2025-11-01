@@ -1,6 +1,6 @@
 class MarkCartAsAbandonedJob
   include Sidekiq::Job
-  
+
   def perform
     mark_abandoned_carts
     remove_abandoned_carts
@@ -9,28 +9,14 @@ class MarkCartAsAbandonedJob
   private
 
   def mark_abandoned_carts
-    threshold = 3.hours.ago
-
-    carts_to_mark = Cart
-      .where(abandoned: false)
-      .where('updated_at < ?', threshold)
-
-    carts_to_mark.find_each do |cart|
-      cart.update!(abandoned: true)
-      Rails.logger.info("Cart ##{cart.id} marked as abandoned")
-    end
+    Cart.where(abandoned: false)
+        .where('last_interaction_at < ?', 3.hours.ago)
+        .update_all(abandoned: true, updated_at: Time.current)
   end
 
   def remove_abandoned_carts
-    threshold = 7.days.ago
-
-    carts_to_delete = Cart
-      .where(abandoned: true)
-      .where('updated_at < ?', threshold)
-
-    carts_to_delete.find_each do |cart|
-      cart.destroy!
-      Rails.logger.info("Cart ##{cart.id} removed after 7 days abandoned")
-    end
+    Cart.where(abandoned: true)
+        .where('last_interaction_at < ?', 7.days.ago)
+        .destroy_all
   end
 end
