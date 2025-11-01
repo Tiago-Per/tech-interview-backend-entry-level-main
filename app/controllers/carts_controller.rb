@@ -1,9 +1,7 @@
 class CartsController < ApplicationController
   # POST /cart
   def create
-    cart = current_cart
-    cart = AddProductToCartService.new(cart, cart_params[:product_id], cart_params[:quantity]).call
-
+    cart = add_product_to_cart
     render json: cart.as_json_payload, status: :created
   end
 
@@ -13,7 +11,18 @@ class CartsController < ApplicationController
     render json: cart.as_json_payload
   end
 
+  # POST /cart/add_item
+  def add_item
+    cart = add_product_to_cart
+    render json: cart.as_json_payload, status: :created
+  end
+
   private
+
+  def add_product_to_cart
+    cart = current_cart
+    AddProductToCartService.new(cart, cart_params[:product_id], cart_params[:quantity]).call
+  end
 
   def current_cart
     if session[:cart_id]
