@@ -17,6 +17,18 @@ class CartsController < ApplicationController
     render json: cart.as_json_payload, status: :created
   end
 
+  # DELETE /cart/:product_id
+  def remove_item
+    cart = current_cart
+
+    begin
+      cart = RemoveProductFromCartService.new(cart, cart_params[:product_id]).call
+      render json: cart.as_json_payload
+    rescue ActiveRecord::RecordNotFound => e
+      render json: { error: e.message }, status: :not_found
+    end
+  end
+
   private
 
   def add_product_to_cart

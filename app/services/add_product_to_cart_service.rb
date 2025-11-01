@@ -11,16 +11,7 @@ class AddProductToCartService
     cart_item.quantity += @quantity
     cart_item.save!
 
-    update_cart_total
+    @cart.recalculate_total!
     @cart
-  end
-
-  private
-
-  def update_cart_total
-    total = @cart.cart_items.includes(:product).sum do |ci|
-      ci.product.price * ci.quantity
-    end
-    @cart.update!(total_price: total)
   end
 end
